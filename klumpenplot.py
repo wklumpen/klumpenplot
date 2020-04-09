@@ -8,18 +8,17 @@ PURPLE = "#823BA0"
 GREEN = "#559613"
 COLOR_SET = [ORANGE, BLUE, GREEN, PURPLE]
 
-DEFAULT_PARAMS = {
+DEFAULT = {
     'axes.facecolor': 'white',
     'axes.edgecolor': '0.65',
     'axes.grid': False,
     'axes.axisbelow': True,
-    # 'axes.labelcolor': '.15',
-    # 'figure.facecolor': 'white',
-    # 'text.color': '.15',
-    # 'xtick.color': '.15',
-    # 'ytick.color': '.15',
-    # 'xtick.direction': 'out',
-    # 'ytick.direction': 'out',
+    'axes.titlelocation': 'left',
+    'axes.titlesize': 18,
+    'axes.titleweight': 'bold',
+    'axes.spines.right': False,
+    'axes.spines.top': False,
+    'axes.prop_cycle': cycler('color', COLOR_SET),
     'lines.solid_capstyle': 'round',
     'patch.edgecolor': 'w',
     'image.cmap': 'rocket',
@@ -29,26 +28,37 @@ DEFAULT_PARAMS = {
         'Liberation Sans',
         'sans-serif'],
     'font.weight': 'normal',
-    # 'patch.force_edgecolor': True,
-    # 'xtick.bottom': False,
-    # 'xtick.top': False,
-    # 'ytick.left': False,
-    # 'ytick.right': False,
-    'axes.titlelocation': 'left',
-    'axes.titlesize': 18,
-    'axes.titleweight': 'bold',
-    # 'axes.spines.left': True,
-    # 'axes.spines.bottom': True,
-    'axes.spines.right': False,
-    'axes.spines.top': False,
-    'axes.prop_cycle': cycler('color', COLOR_SET),
+    'figure.autolayout': True,
     'figure.dpi': 100,
-    'figure.figsize': (10.24, 5.12),
-    'figure.autolayout': True
+    'figure.figsize': (10, 10)
 }
 
-def setup():
-    sns.set(rc=DEFAULT_PARAMS)
+TWITTER = {
+    'figure.dpi': 100,
+    'figure.figsize': (10.24, 5.12),
+    'axes.titlelocation': 'left',
+}
+
+PAPER = {
+    'figure.dpi': 100,
+    'figure.figsize': (8.5, 11),
+    'axes.titlelocation': 'center',
+    'axes.titlesize': 14,
+    'axes.titleweight': 'bold'
+}
+
+def setup(style='default'):
+    params = DEFAULT
+
+    if style == 'twitter':
+        for key, val in TWITTER.items():
+            params[key] = val
+
+    elif style == 'paper':
+        for key, val in PAPER.items():
+            params[key] = val
+
+    sns.set(rc=params)
 
 def tweet(ax, title=None, subtitle=None, xlabel=None, ylabel=None, notes=None, credit=None):
     # Make it look good for tweets.

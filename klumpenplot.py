@@ -47,6 +47,14 @@ PAPER = {
     'axes.titleweight': 'bold'
 }
 
+SQUARE_PAPER = {
+    'figure.dpi': 100,
+    'figure.figsize': (10, 10),
+    'axes.titlelocation': 'center',
+    'axes.titlesize': 14,
+    'axes.titleweight': 'bold'
+}
+
 def setup(style='default'):
     params = DEFAULT
 
@@ -56,6 +64,10 @@ def setup(style='default'):
 
     elif style == 'paper':
         for key, val in PAPER.items():
+            params[key] = val
+    
+    elif style == 'square_paper':
+        for key, val in SQUARE_PAPER.items():
             params[key] = val
 
     sns.set(rc=params)

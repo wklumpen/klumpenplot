@@ -1,118 +1,37 @@
-import seaborn as sns
-from cycler import cycler
+import sys
+import time
 
-# Default hues for colours
-ORANGE = "#F58426"
-BLUE = "#2464B0"
-PURPLE = "#823BA0"
-GREEN = "#559613"
-COLOR_SET = [ORANGE, BLUE, GREEN, PURPLE]
+import PyQt5.QtWidgets as W
+import PyQt5.QtGui as G
+import PyQt5.QtSql as S
+import PyQt5.QtCore as C
+import PyQt5.Qt as Q
 
-DEFAULT = {
-    'axes.facecolor': 'white',
-    'axes.edgecolor': '0.65',
-    'axes.grid': False,
-    'axes.axisbelow': True,
-    'axes.titlelocation': 'left',
-    'axes.titlesize': 18,
-    'axes.titleweight': 'bold',
-    'axes.spines.right': False,
-    'axes.spines.top': False,
-    'axes.prop_cycle': cycler('color', COLOR_SET),
-    'lines.solid_capstyle': 'round',
-    'patch.edgecolor': 'w',
-    'image.cmap': 'rocket',
-    'font.family': ['sans-serif'],
-    'font.sans-serif': [
-        'Raleway',
-        'Liberation Sans',
-        'sans-serif'],
-    'font.weight': 'normal',
-    'figure.autolayout': True,
-    'figure.dpi': 100,
-    'figure.figsize': (10, 10)
-}
+from gui.MCRouteUI import Ui_MainWindow
 
-TWITTER = {
-    'figure.dpi': 100,
-    'figure.figsize': (10.24, 5.12),
-    'axes.titlelocation': 'left',
-}
+class MCRouteMainWindow(W.QMainWindow, Ui_MainWindow):
+    def __init__(self, app, parent=None):
+        super(MCRouteMainWindow, self).__init__(parent)
+        self.app = app
+        self.setupUi(self)
+        self.statusbar.showMessage("Welcome to MCRoute")
 
-PAPER = {
-    'figure.dpi': 100,
-    'figure.figsize': (8.5, 11),
-    'axes.titlelocation': 'center',
-    'axes.titlesize': 14,
-    'axes.titleweight': 'bold'
-}
+if __name__ == "__main__":
+    app = W.QApplication(sys.argv)
+    mw = MCRouteMainWindow(app)
+    raleway = G.QFont("Raleway", 10)
+    app.setFont(raleway)
 
-PAPER_SQUARE = {
-    'figure.dpi': 100,
-    'figure.figsize': (10, 10),
-    'axes.titlelocation': 'center',
-    'axes.titlesize': 14,
-    'axes.titleweight': 'bold'
-}
+    # Create and display the splash screen
+    splash_pix = G.QPixmap('resources/images/mcroute-splash.png')
+    splash = W.QSplashScreen(splash_pix, C.Qt.WindowStaysOnTopHint)
+    splash.setMask(splash_pix.mask())
+    # splash.show()
+    app.processEvents()
 
-PAPER_COMPACT = {
-    'figure.dpi': 100,
-    'figure.figsize': (4, 4),
-    'axes.titlelocation': 'center',
-    'axes.titlesize': 12,
-    'axes.titleweight': 'bold'
-}
-
-
-def setup(style='default'):
-    params = DEFAULT
-
-    if style == 'twitter':
-        for key, val in TWITTER.items():
-            params[key] = val
-
-    elif style == 'paper':
-        for key, val in PAPER.items():
-            params[key] = val
-    
-    elif style == 'paper_square':
-        for key, val in PAPER_SQUARE.items():
-            params[key] = val
-
-    elif style == 'paper_compact':
-        for key, val in PAPER_COMPACT.items():
-            params[key] = val
-
-    sns.set(rc=params)
-
-def tweet(ax, title=None, subtitle=None, xlabel=None, ylabel=None, notes=None, credit=None):
-    # Make it look good for tweets.
-    if subtitle:
-        ax.set_title(title, pad=22)
-        ax.text(
-            ax.get_xlim()[0] + ax.margins()[0], 
-            ax.get_ylim()[1]*1.03, 
-            subtitle, 
-            fontstyle='italic')
-    else:
-        ax.set_title(title, pad=10)
-    if credit:
-        ax.text(
-            ax.get_xlim()[1] + ax.margins()[0], 
-            ax.get_ylim()[0]-0.20*(ax.get_ylim()[1] - ax.get_ylim()[0]), 
-            credit, 
-            fontsize=10, 
-            horizontalalignment='right')
-    if notes:
-        ax.text(
-            ax.get_xlim()[0] + ax.margins()[0], 
-            ax.get_ylim()[0]-0.20*(ax.get_ylim()[1] - ax.get_ylim()[0]), 
-            notes, 
-            fontsize=10, 
-            horizontalalignment='left')
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    return ax
-
-
-
+    icon = G.QIcon()
+    icon.addPixmap(G.QPixmap("resources/images/favicon.ico"), G.QIcon.Normal, G.QIcon.Off)
+    mw.setWindowIcon(icon)
+    mw.showMaximized()
+    splash.finish(mw)
+    sys.exit(app.exec_())
